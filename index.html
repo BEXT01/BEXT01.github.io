@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enigma</title>
+    <title>Echihona's Website</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(to bottom, #000033, #191970);
         }
         .login-container {
@@ -35,17 +35,51 @@
             border: none;
             cursor: pointer;
         }
+        #content {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        .image {
+            position: absolute;
+            max-width: 200px;
+            max-height: 200px;
+            transform: rotate(var(--rotation));
+        }
+        #playlist {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Welcome</h2>
+    <div class="login-container" id="login">
+        <h2>Welcome to Echihona's Website</h2>
         <form onsubmit="return checkPassword()">
             <input type="text" id="username" placeholder="Username" required>
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-        <audio id="song" src="background-music.mp3" autoplay loop></audio>
+    </div>
+
+    <div id="content">
+        <div id="playlist">
+            <h3>Playlist</h3>
+            <select id="song-select" onchange="changeSong()">
+                <option value="song1.mp3">Song 1</option>
+                <option value="song2.mp3">Song 2</option>
+                <option value="song3.mp3">Song 3</option>
+            </select>
+            <audio id="audio-player" controls>
+                <source id="audio-source" src="" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
     </div>
 
     <script>
@@ -53,13 +87,37 @@
             var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
             if (username === 'Echihona' && password === 'Strawberry') {
-                alert('Login successful!');
-                document.getElementById('song').play();
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+                loadImages();
+                changeSong();
                 return false;
             } else {
                 alert('Incorrect username or password');
                 return false;
             }
+        }
+
+        function loadImages() {
+            const content = document.getElementById('content');
+            for (let i = 1; i <= 11; i++) {
+                const img = document.createElement('img');
+                img.src = `image${i}.jpg`;  // Make sure to name your images accordingly
+                img.classList.add('image');
+                img.style.setProperty('--rotation', `${Math.random() * 60 - 30}deg`);
+                img.style.left = `${Math.random() * 80}%`;
+                img.style.top = `${Math.random() * 80}%`;
+                content.appendChild(img);
+            }
+        }
+
+        function changeSong() {
+            const select = document.getElementById('song-select');
+            const audioSource = document.getElementById('audio-source');
+            const audioPlayer = document.getElementById('audio-player');
+            audioSource.src = select.value;
+            audioPlayer.load();
+            audioPlayer.play();
         }
     </script>
 </body>
